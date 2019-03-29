@@ -1,27 +1,35 @@
 """
 Format_Dataset.py
 Purpose: Takes Yahoo finance closing prices csv and creates a new CSV to use for R data analysis
-Last Edit: 3/27/2019 Justin Stachofsky
+Last Edit: 3/28/2019 Justin Stachofsky
 """
 
 # Library imports
-import csv      # Python CSV functionalities
+import csv                          # Python CSV library
+import sys                          # sys used for CLI arguments and error messages
 
 # File Imports
-from DataPoint import DataPoint
+from DataPoint import DataPoint     # DataPoint class file
 
 # Handle program flow
 def main():
     
-     datapoints = create_datapoint_objects()
+    # Checking for valid CLI argument
+    if (sys.argv[1] != 'spy') and (sys.argv[1] !=  'tru'):
+        sys.exit("Invalid input, please use 'spy' or 'tru'")
 
-     for datapoint in datapoints:
-        print(datapoint.efx_close + " " + datapoint.spy_close + " "+ datapoint.tru_close + " " + datapoint.date)
+    # Create list of DataPoint objects
+    datapoints = create_datapoint_objects('Yahoo_Finance_Export.csv')
 
-def create_datapoint_objects():
+    # Create new CSV from DataPoint objects
+    create_new_csv(datapoints, sys.argv[1])
+
+
+# Returns a list of DataPoint objects for a CSV file
+def create_datapoint_objects(csv_name):
     
-    with open("Yahoo_Finance_Export.csv") as csv_file:
-        csv_reader = csv.reader(csv_file, delimiter =',')
+    with open(csv_name) as csv_file:
+        csv_reader = csv.reader(csv_file, delimiter = ',')
         datapoint_list = []
 
         for row in csv_reader:
@@ -29,6 +37,29 @@ def create_datapoint_objects():
             datapoint_list.append(datapoint)
 
     return datapoint_list
+
+# Creates a new CSV with individual line for Equifax stock and control stock per date
+# Unformatted CSV has all stocks on one date line
+def create_new_csv(datapoints, stock):
+
+    with open('Formatted_Export_' + stock + '.csv', mode = 'w') as csv_file:
+        csv_writer = csv.writer(csv_file, delimiter = ',', quotechar = '"', quoting = csv.QUOTE_MINIMAL)
+        
+        # Write header row
+        csv_writer.writerow(['Date', 'Close Price', 'Equifax'])
+
+        # Data starts at row 1
+        i = 1
+
+        # Iterate through objects and create rows in new csv
+        # Create row for EFX, and row for either SPY or TRU depending on parameter
+        while i < len(datapoints):
+            csv_writer.writerow([datapoints[i].date, datapoints[i].efx_close, 1])
+            if stock == 'spy':
+                csv_writer.writerow([datapoints[i].date, datapoints[i].spy_close, 0])
+            elif stock == 'tru':
+                csv_writer.writerow([datapoints[i].date, datapoints[i].tru_close, 0])
+            i+=1
 
 # Start program exection at main 
 if __name__== "__main__":
