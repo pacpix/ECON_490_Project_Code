@@ -14,4 +14,4 @@ class DataPoint:
         self.spy_close = spy_close
         self.tru_close = tru_close
 
-
+    
