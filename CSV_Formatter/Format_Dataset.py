@@ -1,7 +1,7 @@
 """
 Format_Dataset.py
 Purpose: Takes Yahoo finance closing prices csv and creates a new CSV to use for R data analysis
-Last Edit: 3/28/2019 Justin Stachofsky
+Last Edit: 5/2/2019 Justin Stachofsky
 """
 
 # Library imports
@@ -33,7 +33,7 @@ def create_datapoint_objects(csv_name):
         datapoint_list = []
 
         for row in csv_reader:
-            datapoint = DataPoint(row[0], row[1], row[2], row[3])
+            datapoint = DataPoint(row[0], row[1], row[2], row[3], row[4], row[5], row[6])
             datapoint_list.append(datapoint)
 
     return datapoint_list
@@ -46,19 +46,19 @@ def create_new_csv(datapoints, stock):
         csv_writer = csv.writer(csv_file, delimiter = ',', quotechar = '"', quoting = csv.QUOTE_MINIMAL)
         
         # Write header row
-        csv_writer.writerow(['Date', 'Close Price', 'Equifax'])
+        csv_writer.writerow(['Date', 'Close_Price', 'Percent_Change', 'Equifax'])
 
-        # Data starts at row 1
-        i = 1
+        # Data starts at row 2
+        i = 2
 
         # Iterate through objects and create rows in new csv
         # Create row for EFX, and row for either SPY or TRU depending on parameter
         while i < len(datapoints):
-            csv_writer.writerow([datapoints[i].date, datapoints[i].efx_close, 1])
+            csv_writer.writerow([datapoints[i].date, datapoints[i].efx_close, datapoints[i].efx_percent, 1])
             if stock == 'spy':
-                csv_writer.writerow([datapoints[i].date, datapoints[i].spy_close, 0])
+                csv_writer.writerow([datapoints[i].date, datapoints[i].spy_close, datapoints[i].spy_percent, 0])
             elif stock == 'tru':
-                csv_writer.writerow([datapoints[i].date, datapoints[i].tru_close, 0])
+                csv_writer.writerow([datapoints[i].date, datapoints[i].tru_close, datapoints[i].tru_percent, 0])
             i+=1
 
 # Start program exection at main 
