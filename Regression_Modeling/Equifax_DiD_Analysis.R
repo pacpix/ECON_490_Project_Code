@@ -1,6 +1,6 @@
 # Equifax_DiD_Analysis.R
 # Purpose: Run DiD regressions for Equifax stock data
-# Last Edit: 5/4/2019 Justin Stachofsky
+# Julia Stachofsky
 
 
 # Package imported for setting working directory
