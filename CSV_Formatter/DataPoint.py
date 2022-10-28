@@ -1,7 +1,7 @@
 """
 DataPoint.py
 Class for DataPoints from stock CSV
-Last Edit: 5/2/2019 Justin Stachofsky
+Julia Stachofsky
 
 """
 
